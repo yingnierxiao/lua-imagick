@@ -44,7 +44,7 @@ add_definitions("-Wall")
 
 find_package(ImageMagick COMPONENTS MagickWand MagickCore REQUIRED)
 
-add_library(imagick SHARED ${sources})
+add_library(imagick MODULE ${sources})
 set_target_properties(imagick PROPERTIES PREFIX "")
 if (NOT WIN32)
   set_target_properties(imagick PROPERTIES SUFFIX ".so")
