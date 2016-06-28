@@ -958,6 +958,28 @@ static int imagick_scale(lua_State* L)
   return 1;
 }
 
+static int imagick_trim(lua_State* L)
+{
+  LuaImage* a = checkimage(L, 1);
+ 
+  MagickResetIterator(a->m_wand);
+  while (MagickNextImage(a->m_wand) == 1)
+  {
+    if (MagickTrimImage(a->m_wand,0) != MagickTrue)
+    {
+      ExceptionType severity;
+      char* error=MagickGetException(a->m_wand, &severity);
+      lua_pushboolean(L, 0);
+      lua_pushstring(L, error);
+      return 2;
+    }
+  }
+  MagickResetIterator(a->m_wand);
+
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
 static int imagick_crop(lua_State* L)
 {
   LuaImage* a = checkimage(L, 1);
@@ -1557,6 +1579,7 @@ static const struct luaL_Reg imagicklib_m[] = {
   {"adaptive_resize",                 imagick_adaptive_resize},
   {"resample",                        imagick_resample},
   {"scale",                           imagick_scale},
+  {"trim",                            imagick_trim},
   {"crop",                            imagick_crop},
   {"thumbnail",                       imagick_thumbnail},
   {"composite",                       imagick_composite},
